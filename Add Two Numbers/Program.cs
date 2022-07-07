@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Collections;
 public class ListNode
 {
     public int val;
@@ -14,20 +15,22 @@ public class Solution
 {
     public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
     {
+
+        List<ListNode> list = new List<ListNode>();
         if (l1 == null) return null!;
         if (l2 == null) return null!;
         ListNode current1 = l1;
         ListNode current2 = l2;
         ListNode? resultlist = null;
         ListNode? reverselist = null;
-        int addOne = 0;
+        int CarryOne = 0;
         int sum = 0;
         while (current1 != null || current2 != null)
         {
-            if (addOne > 0)
+            if (CarryOne > 0)
             {
                 resultlist = new ListNode(1, resultlist);
-                addOne = 0;
+                CarryOne = 0;
             }
             else
             {
@@ -35,7 +38,7 @@ public class Solution
             }
             sum = resultlist.val + (current1 != null ? current1.val : 0) + (current2 != null ? current2.val : 0);
             resultlist.val = sum % 10;  // remainder 
-            addOne = sum / 10;    // quotient 
+            CarryOne = sum / 10;    // quotient 
             if (current1 != null)
             {
                 current1 = current1.next;
@@ -45,7 +48,7 @@ public class Solution
                 current2 = current2.next;
             }
         }
-        if (addOne > 0)
+        if (CarryOne > 0)
         {
             resultlist = new ListNode(1, resultlist);
         }
@@ -86,9 +89,38 @@ public class Solution
 
     }
 
+    public ListNode AddTwoNumbers3(ListNode l1, ListNode l2)
+    {
+        ListNode res = new ListNode();  // result ListNode
+        ListNode curr = res;    // pointer to result listNode
+        int carry = 0;
+
+        // start iterating through listed list
+        // add carry == 1 to handle the leading carry like 100 = 99 + 1
+        while (l1 != null || l2 != null || carry == 1)
+        {
+            int v1 = (l1 == null ? 0 : l1.val);
+            int v2 = (l2 == null ? 0 : l2.val);
+
+            // calculate the sum
+            int val = v1 + v2 + carry;
+            // if 7 + 8 = 15, Calculate the carry
+            carry = val / 10;
+            val = val % 10;
+            curr.next = new ListNode(val);
+
+            // update pointer
+            curr = curr.next; 
+            l1 = l1 == null ? null! : l1.next;
+            l2 = l2 == null ? null! : l2.next;
+        }
+        return res.next;
+    }
+
+
     public List<int> printAllNodes(ListNode? next = null)
     {
-        List<int> list = new List<int>();   
+        List<int> list = new List<int>();
         ListNode? current = next;
         while (current != null)
         {
@@ -104,7 +136,8 @@ public class Solution
         if (head == null)
         {
             head = newNode;
-        } else
+        }
+        else
         {
             ListNode current = head;
             while (current.next != null)
@@ -126,8 +159,8 @@ public class Solution
         //int[] nums1 = { 2, 4, 3 };
         //int[] nums2 = { 5, 6, 4 };
 
-        //int[] nums1 = { 9, 9, 9, 9, 9, 9, 9 };
-        //int[] nums2 = { 9, 9, 9, 9 };
+        int[] nums1 = { 9, 9, 9, 9, 9, 9, 9 };
+        int[] nums2 = { 9, 9, 9, 9 };
 
         //int[] nums1 = { 9, 9, 9, 9 };
         //int[] nums2 = { 9, 9, 9, 9, 9, 9, 9 };
@@ -138,8 +171,8 @@ public class Solution
         //int[] nums1 = { 2, 4, 9 };
         //int[] nums2 = { 5, 6, 4, 9 };
 
-        int[] nums1 = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
-        int[] nums2 = { 4, 6, 5 };
+        //int[] nums1 = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+        //int[] nums2 = { 4, 6, 5 };
 
         ListNode? l1 = null;
         ListNode? l2 = null;
@@ -152,7 +185,8 @@ public class Solution
         {
             l2 = sol.Append(l2!, x);
         }
-        ListNode res = sol.AddTwoNumbers(l1!, l2!);
+        ListNode res = sol.AddTwoNumbers3(l1!, l2!);
         Console.WriteLine(String.Join("", sol.printAllNodes(res)));
+
     }
 }
